@@ -1,4 +1,4 @@
-# coin_exchange_api
+# curl
 
 ## Installation
 ```
