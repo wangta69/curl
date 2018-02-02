@@ -1,0 +1,21 @@
+{
+    "name": "Pondol Curl",
+    "description": "Curl",
+    "keywords": ["laravel", "Curl", "pondol"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Pondol",
+            "email": "wangta69@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=5.3.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Pondol\\Curl\\": "src/"
+        }
+    }
+}
