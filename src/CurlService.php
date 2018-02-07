@@ -41,8 +41,6 @@ echo $res->getBody();
 
 class CurlService
 {
-
-
     private $ch;
     private $response;
     
