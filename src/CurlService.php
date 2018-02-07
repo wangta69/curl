@@ -86,6 +86,8 @@ class CurlService
         
         if (!curl_errno($this->ch)) {
           $this->response->set_info(curl_getinfo($this->ch));
+        }else{
+            $this->response->err_code = curl_errno($this->ch);
         }
 
         curl_close($this->ch);
@@ -114,6 +116,7 @@ class CurlService
                 
     
     private function set_agent($agent){
+        echo "set_agent:".$agent.PHP_EOL;
         curl_setopt($this->ch, CURLOPT_USERAGENT, $agent);
     }
      
@@ -133,7 +136,7 @@ class CurlService
     }
      /**
       * The contents of the "Accept-Encoding: " header. This enables decoding of the response. 
-      * Supported encodings are "identity", "deflate", and "gzip". If an empty string, "", is set, a header containing all supported encoding types is sent.
+      * Supported encodings are "identity", "deflate", br, and "gzip". If an empty string, "", is set, a header containing all supported encoding types is sent.
       */
     private function set_encoding($encoding){
         curl_setopt($this->ch,CURLOPT_ENCODING , $encoding);
@@ -156,6 +159,10 @@ class CurlService
     
     
     // return 
+    public function get_response(){
+        return $this->response;
+    }
+    
     public function info(){
         return $this->response->info();
     }
@@ -176,5 +183,9 @@ class CurlService
         return $this->response->body();
     }
     
+    public function err_message(){
+        return $this->response->err_message();
+    }
+
 
 }
