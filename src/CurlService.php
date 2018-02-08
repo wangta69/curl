@@ -8,35 +8,28 @@ use Response;
 use Pondol\Curl\CurlResponse;
 
 /*
-//GET, POST, HEAD, PUT, DELETE 가 가능하게 처리
-//$curl = new \Pondol\Curl('GET', 'http://www.shop-wiz.com/');
-//$curl = new \Pondol\Curl('GET', 'http://www.shop-wiz.com/', [
+GET, POST, HEAD, PUT, DELETE 가 가능하게 처리
+$curl = new \Pondol\Curl('GET', 'http://www.shop-wiz.com/');
+$curl = new \Pondol\Curl('POST', 'http://www.shop-wiz.com/', $params);
 
- * ## options
- 'headers'=>[], 
- headers[] = 'Accept: image/gif, image/x-bitmap, image/jpeg, image/pjpeg, application/json';
- headers[] = 'Connection: Keep-Alive';
- headers[] = 'Content-type: application/x-www-form-urlencoded;charset=UTF-8';
+## options
+
+$params['headers'][] = 'Accept: image/gif, image/x-bitmap, image/jpeg, image/pjpeg, application/json';
+$params['headers'][] = 'Connection: Keep-Alive';
+$params['headers'][] = 'Content-type: application/x-www-form-urlencoded;charset=UTF-8';
  
- 'proxy'=>'tcp://localhost:1111', 
-// 'cookies' => ㅇㄹㅇㄹ, 'json' => ['foo' => 'bar'], 'timeout' => 3.14]);
+$params['proxy'] = 'tcp://localhost:1111', 
+ 
+$params['body'] = string or array
 
+$params['encoding'] = 'gzip'// "identity", "deflate", and "gzip
+ 
+// 'json' => ['foo' => 'bar'], 'timeout' => 3.14]);
 
-//body => string
-//body =>array
+$params['agent'] = 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; .NET CLR 1.0.3705; .NET CLR 1.1.4322; Media Center PC 4.0)';
 
-// encoding='gzip'// "identity", "deflate", and "gzip
-//agent = 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; .NET CLR 1.0.3705; .NET CLR 1.1.4322; Media Center PC 4.0)';
+$params['cookies'] = [filepath=''] , if [cookies=>[]] path willbe /tmp/filename
 
-//cookies = [filepath=''] , if [cookies=>[]] path willbe /tmp/filename
-
-/*$res = $client->request('GET', 'https://api.github.com/repos/guzzle/guzzle');
-echo $res->getStatusCode();
-// 200
-echo $res->getHeaderLine('content-type');
-// 'application/json; charset=utf8'
-echo $res->getBody();
-// '{"id": 1420053, "name": "guzzle", ...}'
 */
 
 class CurlService
@@ -50,7 +43,7 @@ class CurlService
     
     public function request($method, $url, $options=array()){
         
-        $this->ch = curl_init($url);
+        $this->ch = curl_init();
         
         curl_setopt($this->ch, CURLOPT_AUTOREFERER, true);//TRUE to automatically set the Referer: field in requests where it follows a Location: redirect.
         curl_setopt($this->ch, CURLOPT_HEADER, true);//TRUE to include the header in the output.
@@ -68,16 +61,21 @@ class CurlService
         
         switch($method){
             case "POST":
+                
+                curl_setopt($this->ch, CURLOPT_URL, $url);
                 curl_setopt($this->ch, CURLOPT_POST, true);
                 isset($options['body']) ?  $this->set_body($options['body']):null;
                 break;
             case "GET":
+                curl_setopt($this->ch, CURLOPT_URL, $this->build_http_get_url($url, $options));
                 break;
             case "HEAD":
+                curl_setopt($this->ch, CURLOPT_URL, $url);
                 curl_setopt( $this->ch, CURLOPT_NOBODY, true );
                 curl_setopt($this->ch, CURLOPT_CUSTOMREQUEST, $method);//PUT, DELETE, HEAD
                 break;
             default:
+                curl_setopt($this->ch, CURLOPT_URL, $url);
                 curl_setopt($this->ch, CURLOPT_CUSTOMREQUEST, $method);//PUT, DELETE, HEAD
                 break;
         }
@@ -101,6 +99,19 @@ class CurlService
         $options['headers'][] = 'Content-Type: application/json';
         $options['headers'][] = 'Content-Length: ' . strlen($options['body']);
         $this->request($method, $url, $options);
+    }
+    
+
+    private function build_query($body){
+        return is_array($body) ? http_build_query($body):null;
+    }
+    
+    private function build_http_get_url($url, $options=[]){
+        if(isset($options['body'])){
+            $query = $this->build_query($options['body']);
+            return $url.'?'.$query;
+        }else
+            return $url;
     }
     
     private function set_header($headers){
