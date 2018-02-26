@@ -8,7 +8,8 @@ use Response;
 use Pondol\Curl\CurlResponse;
 
 /*
-GET, POST, HEAD, PUT, DELETE 가 가능하게 처리
+GET, POST, HEAD, PUT, DELETE Enable
+
 $curl = new \Pondol\Curl('GET', 'http://www.shop-wiz.com/');
 $curl = new \Pondol\Curl('POST', 'http://www.shop-wiz.com/', $params);
 
@@ -59,7 +60,7 @@ class CurlService
         
       //  
         
-        switch($method){
+        switch(strtoupper($method)){
             case "POST":
                 
                 curl_setopt($this->ch, CURLOPT_URL, $url);
