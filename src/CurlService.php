@@ -44,12 +44,17 @@ class CurlService
     
     public function request($method, $url, $options=array()){
         
+        $url = $this->url_change($url);
+        
         $this->ch = curl_init();
         
         curl_setopt($this->ch, CURLOPT_AUTOREFERER, true);//TRUE to automatically set the Referer: field in requests where it follows a Location: redirect.
         curl_setopt($this->ch, CURLOPT_HEADER, true);//TRUE to include the header in the output.
         curl_setopt($this->ch, CURLOPT_RETURNTRANSFER, true);//TRUE to return the raw output when CURLOPT_RETURNTRANSFER is used.
         curl_setopt($this->ch, CURLOPT_FOLLOWLOCATION, true);
+        //$url = curl_escape($this->ch, $url);
+        
+        //echo "url:".$url.PHP_EOL;
          
         isset($options['headers']) ?  $this->set_header($options['headers']):null;
         isset($options['agent']) ?  $this->set_agent($options['agent']):null;
@@ -105,6 +110,13 @@ class CurlService
 
     private function build_query($body){
         return is_array($body) ? http_build_query($body):null;
+    }
+    
+    private function url_change($url){
+        $search = array(" ");
+        $replace   = array("%20");
+        
+        return str_replace($search, $replace, $url);
     }
     
     private function build_http_get_url($url, $options=[]){
