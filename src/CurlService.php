@@ -52,7 +52,11 @@ class CurlService
         curl_setopt($this->ch, CURLOPT_HEADER, true);//TRUE to include the header in the output.
         curl_setopt($this->ch, CURLOPT_RETURNTRANSFER, true);//TRUE to return the raw output when CURLOPT_RETURNTRANSFER is used.
         curl_setopt($this->ch, CURLOPT_FOLLOWLOCATION, true);
-        //$url = curl_escape($this->ch, $url);
+        
+        
+        //curl_setopt($this->ch, CURLOPT_RETURNTRANSFER, true);
+        //curl_setopt($this->ch, CURLOPT_VERBOSE, true);
+        
         
         //echo "url:".$url.PHP_EOL;
          
@@ -140,23 +144,24 @@ class CurlService
                 
     
     private function set_agent($agent){
-        echo "set_agent:".$agent.PHP_EOL;
+        //echo "set_agent:".$agent.PHP_EOL;
         curl_setopt($this->ch, CURLOPT_USERAGENT, $agent);
     }
      
      /**
       * @param Array cookies = [filepath='']
       */
-     private function set_cookies($cookies){
+     private function set_cookies($cookies=null){
         $filepath = isset($cookies['filepath']) ? $cookies['filepath']:$this->get_cookie_path();
-         
-        curl_setopt($this->ch, CURLOPT_COOKIEJAR, $this->cookie_file);//makes curl to store the cookies in a file at the and of the curl session
-        curl_setopt($this->ch, CURLOPT_COOKIEFILE, $this->cookie_file);//makes curl to use the given file as source for the cookies to send to the server. 
+
+        curl_setopt($this->ch, CURLOPT_COOKIEJAR, $filepath);//(write) makes curl to store the cookies in a file at the end of the curl session
+        curl_setopt($this->ch, CURLOPT_COOKIEFILE, $filepath);//(read) makes curl to use the given file as source for the cookies to send to the server. 
         
     }
     
     private function get_cookie_path(){
-        return tempnam( "/tmp", 'cookie_');
+      // return tempnam( "/tmp", 'cookie_');
+       return '/tmp/cookie_pondol_curl';
     }
      /**
       * The contents of the "Accept-Encoding: " header. This enables decoding of the response. 
