@@ -1,5 +1,5 @@
 <?php
-namespace Pondol\Curl;
+namespace Wangta69\Curl;
 
 
 class CurlResponse
@@ -8,48 +8,48 @@ class CurlResponse
     public $response;
     public $info;
     public $err_code;
-    
+
     public function set_response($response){
         $this->response = $response;
     }
-    
+
     public function set_info($info){
         $this->info = $info;
         $this->header_size = $info['header_size'];
     }
-    
+
     public function info(){
         return $this->info;
     }
-    
+
     public function http_code(){
         return $this->info['http_code'];
     }
-    
+
     public function header_size(){
         return $this->info['header_size'];
     }
-    
+
     public function header(){
         return substr($this->response, 0, $this->info['header_size']);
     }
-    
+
     public function body(){
         return substr($this->response, $this->info['header_size']);
     }
-    
+
     public function err_message(){
         return $this->err_code ? $this->error_codes[$this->err_code] : null;
     }
-    
+
     private $error_codes = array(
-        1 => 'CURLE_UNSUPPORTED_PROTOCOL', 
-        2 => 'CURLE_FAILED_INIT', 
-        3 => 'CURLE_URL_MALFORMAT', 
-        4 => 'CURLE_URL_MALFORMAT_USER', 
-        5 => 'CURLE_COULDNT_RESOLVE_PROXY', 
-        6 => 'CURLE_COULDNT_RESOLVE_HOST', 
-        7 => 'CURLE_COULDNT_CONNECT', 
+        1 => 'CURLE_UNSUPPORTED_PROTOCOL',
+        2 => 'CURLE_FAILED_INIT',
+        3 => 'CURLE_URL_MALFORMAT',
+        4 => 'CURLE_URL_MALFORMAT_USER',
+        5 => 'CURLE_COULDNT_RESOLVE_PROXY',
+        6 => 'CURLE_COULDNT_RESOLVE_HOST',
+        7 => 'CURLE_COULDNT_CONNECT',
         8 => 'CURLE_FTP_WEIRD_SERVER_REPLY',
         9 => 'CURLE_REMOTE_ACCESS_DENIED',
         11 => 'CURLE_FTP_WEIRD_PASS_REPLY',

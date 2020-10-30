@@ -9,7 +9,7 @@ composer require "wangta69/curl @dev"
 ```
 ## How to Use
 ```
-use Pondol\Curl\CurlService;
+use Wangta69\Curl\CurlService;
 
 $body = ['name'=>'pondol'];
 $headers = ['Connection: Keep-Alive', 'Content-type: application/x-www-form-urlencoded;charset=UTF-8'];
@@ -43,7 +43,7 @@ echo $curl->body();
 
 ### Request Json
 ```
-use Pondol\Curl\CurlService;
+use Wangta69\Curl\CurlService;
 
 $body = json_encode(['name'=>'pondol']);
 
